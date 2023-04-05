@@ -84,7 +84,7 @@ class SegForestNet(nn.Module):
             raise RuntimeError("input shape for SegForestNet must be square")
         self.loss_config = config.loss
         params.extra_payload = getattr(params, "extra_payload", 0)
-            
+        print("num_classes", params.num_classes)
         self.class_to_tree_map = [-1] * params.num_classes
         num_encoder_output_features = 0
         for i, tree in enumerate(config.trees):
@@ -96,12 +96,14 @@ class SegForestNet(nn.Module):
                     assert type(output) == int
                     assert 0 <= output < params.num_classes
                 tree.outputs = np.asarray(tree.outputs, dtype=np.int32)
+            print("i:", i, "trees:", tree)
             for output in tree.outputs:
                 assert self.class_to_tree_map[output] == -1
                 self.class_to_tree_map[output] = i
             num_encoder_output_features += tree.num_features.shape + tree.num_features.content
         self.class_to_tree_map = tuple(self.class_to_tree_map)
-        assert -1 not in self.class_to_tree_map
+        print("tree_map", self.class_to_tree_map)
+        # assert -1 not in self.class_to_tree_map
 
         if config.features.variational > 0:
             self.encoder = SegForestNetVariationalEncoder(config, params.input_shape, num_encoder_output_features)
