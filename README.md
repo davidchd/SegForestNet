@@ -68,7 +68,7 @@ Open a terminal in the directory you cloned this repository into and execute the
 python aethon.py semseg toulouse 0 SegForestNet MobileNetv2
 ```
 ```sh
-python eval.py semseg toulouse 0 SegForestNet MobileNetv2
+python eval.py semseg toulouse 0 SegForestNet MobileNetv2 --cpu
 ```
 
 This will use the configuration file ```cfgs/semseg.yaml``` to run our framework. When you are running it for the first time, you also need to add ```--compile``` to the command to compile the code written in Rust. This needs to be done only once. Furthermore, you will need a user configuration file called ```~/.aethon/user.yaml```. An example user configuration can be found below.

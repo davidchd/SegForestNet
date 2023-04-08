@@ -8,13 +8,15 @@ model = core.create_object(models.segmentation, 'SegForestNet', input_shape=[4,2
 # from torchsummary import summary
 # summary(model)
 
-filename = 'Adams,_Samuel_Elementary_.png'
+filename = 'Baldwin_Early_Learning_Pi.png'
+result_name = ''.join([*filename.split('.')[:-1], '_pred.', *filename.split('.')[-1:]])
 
 file_path   = './tmp/Greenspace/School_50m/'
 result_path = './tmp/Greenspace/result/'
 
 import torch
-model.load_state_dict(torch.load('./models/pretrain/132_model_4x224x224.pt'))
+weights = torch.load('./models/pretrain/132_model_4x224x224.pt', map_location=torch.device('cpu'))
+model.load_state_dict(weights)
 
 import PIL.Image
 img = PIL.Image.open(file_path + filename)
@@ -26,7 +28,6 @@ origin = np.asarray(img)
 x = np.empty((4, *origin.shape[:2]))
 for i in range(origin.shape[0]):
     for j in range(origin.shape[1]):
-        # chan = origin[i][j] * (0 if origin[i][j][3] == 255 else 1)
         chan = origin[i][j]
         x[0,i,j], x[1,i,j], x[2,i,j], x[3,i,j] = chan[0], chan[1], chan[2], chan[3]
 x = np.array([x])
@@ -52,4 +53,4 @@ for i in range(y_img.shape[0]):
     for j in range(y_img.shape[1]):
         y_img[i,j,:] = [*lut[y[i,j]], origin[i,j,3]]
 y_img = np.clip(y_img, 0, 255, dtype=np.uint8)
-PIL.Image.fromarray(y_img).save(result_path + 'pred_' + filename)
+PIL.Image.fromarray(y_img).save(result_path + result_name)
