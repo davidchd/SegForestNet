@@ -19,7 +19,7 @@ annotators = {"03": "3", "04": "3", "07": "2", "08": "2"}
 
 class DatasetLoader_toulouse():
     def __init__(self, config):
-        root_path = "/data/geoTL/daten/SemCityToulouse/tmp"
+        root_path = "/projectnb/ds549/students/hjc5283/SegForestNet/tmp/SemCity"
         
         self.images = []        
         for file_id in ("03", "04", "07", "08"):
@@ -31,7 +31,7 @@ class DatasetLoader_toulouse():
             self.images.append(img_set)
         
         self.channels = {
-            "ir": (1, 0),
+            # "ir": (1, 0),
             "red": (0, 0),
             "green": (0, 1),
             "blue": (0, 2),
@@ -47,7 +47,7 @@ class DatasetLoader_toulouse():
 
 class DatasetLoader_toulouse_multi():
     def __init__(self, config):
-        root_path = "/data/geoTL/daten/SemCityToulouse/tmp"
+        root_path = "/projectnb/ds549/students/hjc5283/SegForestNet/tmp/SemCity"
         
         self.images = []
         for file_id in ("03", "04", "07", "08"):

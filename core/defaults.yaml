@@ -76,15 +76,25 @@ __toulouse_defaults: &toulouse-defaults
     <<: *SegmentationDataset-defaults
     domain: toulouse
     channels:
-        input: [ndvi, ir, red, green, blue]
+        input: [ndvi, red, green, blue]
+    split_weights:
+        training: 60
+        validation: 20
+        test: 20
+
+__toulouse_multi_defaults: &toulouse_multi-defaults
+    <<: *SegmentationDataset-defaults
+    domain: toulouse_multi
+    channels:
+        input: [ndvi, blue2, blue, green, yellow, red, red2, ir, ir2]
     split_weights:
         training: 50
         validation: 25
         test: 25
 
-__toulouse_multi_defaults: &toulouse_multi-defaults
+__greenspace_defaults: &greenspace-defaults
     <<: *SegmentationDataset-defaults
-    domain: toulouse_multi
+    domain: greenspace
     channels:
         input: [ndvi, blue2, blue, green, yellow, red, red2, ir, ir2]
     split_weights:

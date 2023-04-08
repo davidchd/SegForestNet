@@ -77,7 +77,7 @@ def init(args=None):
     parser.add_argument("configuration", type=str, help="configuration file")
     parser.add_argument("parameters", nargs="*", type=str, help="configuration parameters")
     parser.add_argument("--cpu", action="store_true", help="use CPU instead of GPU")
-    parser.add_argument("--gpu", default=-1, type=int, help="GPU to use")
+    parser.add_argument("--gpu", default=0, type=int, help="GPU to use")
     parser.add_argument("--threads", default=-1, type=int, help="maximum number of threads")
     parser.add_argument("--compile", action="store_true", help="compile Rust code")
     parser.add_argument("--compile-only", action="store_true", help="compile Rust code and terminate")

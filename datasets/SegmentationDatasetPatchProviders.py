@@ -56,7 +56,7 @@ class NormalizedAugmentedInputProvider(AbstractPatchProvider):
             *config.patch_size
         )
         self.dtype = np.float32
-        
+    
     def extract_patch_numpy(self, result, index):
         img = self.images[self.augmentation.image[index]]
         rust.extract_patch_bilinear_normalized(

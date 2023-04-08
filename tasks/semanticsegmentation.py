@@ -33,7 +33,6 @@ class SemanticSegmentation(utils.ModelFitter):
                 
             region_encoder = None
             self.model = core.create_object(models.segmentation, config.model, input_shape=shape, num_classes=self.dataset.num_classes, region_encoder=region_encoder)
-
             num_params = 0
             for params in self.model.parameters():
                 num_params += np.product(params.shape)
@@ -85,6 +84,7 @@ class SemanticSegmentation(utils.ModelFitter):
     def pre_train(self, epoch, batch, batch_data):
         indices = self.shuffle_map[batch*self.config.mini_batch_size:(batch+1)*self.config.mini_batch_size]
         dataset = self.eval_params.dataset if self.eval_params.enabled else self.dataset.training
+        print(dataset.x[0].shape)
         batch_data.x = dataset.x_gt[indices] if self.config.autoencoder else dataset.x[indices]
         batch_data.yt = dataset.y[indices]
     
