@@ -134,7 +134,7 @@ __SemanticSegmentation_defaults: &SemanticSegmentation-defaults
             margins: [4, 8]
     smoothing: 0.6
     model_specific_defaults:map: # epochs, max. learning rate, mini-batch size
-        - [[SegForestNet, MobileNetv2], [200, 0.01, 36]]
+        - [[SegForestNet, MobileNetv2], [200, 0.008, 48]]
         - [[SegForestNet, Xception], [200, 0.003, 18]]
         - [[FCN, MobileNetv2], [120, 0.013, 36]]
         - [[FCN, Xception], [120, 0.006, 18]]
