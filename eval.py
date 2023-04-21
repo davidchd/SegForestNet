@@ -7,34 +7,12 @@ model = core.create_object(models.segmentation, 'SegForestNet', input_shape=[4,2
 # from torchsummary import summary
 # summary(model)
 
-filename = 'Quincy,_Josiah_Upper_Scho.png'
-result_npy = ''.join([*filename.split('.')[:-1], '_pred'])
-result_img = ''.join([*filename.split('.')[:-1], '_mask.', *filename.split('.')[-1:]])
+import torch
+import numpy as np
+import PIL.Image
 
 file_path   = './tmp/Greenspace/School_50m/'
 result_path = './tmp/Greenspace/result/'
-
-import torch
-weights = torch.load('./models/pretrain/036_48_4x224x224.pt', map_location=torch.device('cpu'))
-model.load_state_dict(weights)
-
-import PIL.Image
-img = PIL.Image.open(file_path + filename)
-img = img.resize((224, 224))
-img.save(result_path + filename)
-
-import numpy as np
-origin = np.asarray(img)
-x = np.empty((4, *origin.shape[:2]))
-for i in range(origin.shape[0]):
-    for j in range(origin.shape[1]):
-        chan = origin[i][j]
-        x[0,i,j], x[1,i,j], x[2,i,j], x[3,i,j] = chan[0], chan[1], chan[2], chan[3]
-x = np.array([x])
-
-y = model(torch.from_numpy(x).float().to(core.device).requires_grad_())
-print(y.shape)
-
 lut = (
     (255,255,255), # void
     ( 38, 38, 38), # impervious surface
@@ -46,11 +24,44 @@ lut = (
     (160, 30,230)  # sports venues
 )
 
-y = y[0].argmax(0).cpu().numpy()
-np.save(result_path + result_npy, y)
-y_img = np.zeros((*y.shape[-2:], 4), dtype=np.uint8)
-for i in range(y_img.shape[0]):
-    for j in range(y_img.shape[1]):
-        y_img[i,j,:] = [*lut[y[i,j]], origin[i,j,3]]
-y_img = np.clip(y_img, 0, 255, dtype=np.uint8)
-PIL.Image.fromarray(y_img).save(result_path + result_img)
+def preprocess(filename):
+    weights = torch.load('./models/pretrain/064_36_4x224x224.pt', map_location=torch.device('cpu'))
+    model.load_state_dict(weights)
+    img = PIL.Image.open(file_path + filename)
+    img = img.resize((224, 224))
+    img.save(result_path + filename)
+    return img
+
+def segment(img):
+    origin = np.asarray(img)
+    x = np.empty((4, *origin.shape[:2]))
+    for i in range(origin.shape[0]):
+        for j in range(origin.shape[1]):
+            chan = origin[i][j]
+            x[0,i,j], x[1,i,j], x[2,i,j], x[3,i,j] = chan[0], chan[1], chan[2], chan[3]
+    x = np.array([x])
+    y = model(torch.from_numpy(x).float().to(core.device).requires_grad_())
+    print(y.shape)
+    return y
+
+def saveResult(filename, img, y):
+    result_npy = ''.join([*filename.split('.')[:-1], '_pred'])
+    result_img = ''.join([*filename.split('.')[:-1], '_mask.', *filename.split('.')[-1:]])
+    y = y[0].argmax(0).numpy()
+    np.save(result_path + result_npy, y)
+    y_img = np.zeros((*y.shape[-2:], 4), dtype=np.uint8)
+    for i in range(y_img.shape[0]):
+        for j in range(y_img.shape[1]):
+            y_img[i,j,:] = [*lut[y[i,j]], np.asarray(img)[i,j,3]]
+    y_img = np.clip(y_img, 0, 255, dtype=np.uint8)
+    PIL.Image.fromarray(y_img).save(result_path + result_img)
+
+filename = 'Quincy,_Josiah_Upper_Scho.png'
+
+import os
+all_files = os.listdir('./tmp/Greenspace/School_50m/')
+
+for e in all_files:
+    img = preprocess(e)
+    y = segment(img)
+    saveResult(e, img, y)
