@@ -54,10 +54,11 @@ def saveResult(filename, img, y):
     result_img = ''.join([*filename.split('.')[:-1], '_mask.', *filename.split('.')[-1:]])
     y = y[0].argmax(0).numpy()
     np.save(result_path + result_npy, y)
+    img_np = np.asarray(img)
     y_img = np.zeros((*y.shape[-2:], 4), dtype=np.uint8)
     for i in range(y_img.shape[0]):
         for j in range(y_img.shape[1]):
-            y_img[i,j,:] = [*lut[y[i,j]], np.asarray(img)[i,j,3]]
+            y_img[i,j,:] = [*lut[y[i,j]], img_np[i,j,3]]
     y_img = np.clip(y_img, 0, 255, dtype=np.uint8)
     PIL.Image.fromarray(y_img).save(result_path + result_img)
     print(result_npy)

@@ -28,10 +28,14 @@ scalars = [baseline[i] / all_stats[i] for i in range(3)]
 print(diff)
 print(scalars)
 
+# manually correction
+from math import sqrt
+scalars[0] = sqrt(scalars[0])
+scalars[0] = sqrt(scalars[0])
+
 for f in all_files:
     img = PIL.Image.open(process_path + f)
     x = np.array(img)
     for i in range(3):
         x[:,:,i] = np.clip(x[:,:,i] * scalars[i], 0, 256)
-    x.astype(np.uint8)
     PIL.Image.fromarray(x).save(process_path + f)

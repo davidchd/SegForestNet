@@ -64,8 +64,3 @@ for e in all_files:
     img = preprocess(e)
     y = segment(img)
     saveResult(e, img, y)
-
-# single_file = 'test-fotot.png'
-# img = preprocess(single_file)
-# y = segment(img)
-# saveResult(single_file, img, y)
