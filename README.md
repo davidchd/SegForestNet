@@ -67,9 +67,6 @@ Open a terminal in the directory you cloned this repository into and execute the
 ```sh
 python aethon.py semseg toulouse 0 SegForestNet MobileNetv2
 ```
-```sh
-python eval.py semseg greenspace 0 SegForestNet MobileNetv2 --cpu
-```
 
 This will use the configuration file ```cfgs/semseg.yaml``` to run our framework. When you are running it for the first time, you also need to add ```--compile``` to the command to compile the code written in Rust. This needs to be done only once. Furthermore, you will need a user configuration file called ```~/.aethon/user.yaml```. An example user configuration can be found below.
 
@@ -131,3 +128,13 @@ The ```trees``` subsection of the configuration is of particular interest. It de
 * ```BSPTree(2, Line)```: for a BSP tree of depth two, i.e., a total of three inner nodes and four leaf nodes, using $f_1$ from our paper as signed distance function
 * ```BSPTree(2, Circle)```: same as above but using $f_3$ instead of $f_1$
 * ```BSPNode(BSPTree(1, Line), Leaf, Line)```: a BSP tree with two inner nodes (the left child of the root node is a BSP tree of depth one while the right child is a leaf node already) and three leaf nodes, using $f_1$ in all inner nodes
+
+## Evaluation on Greenspace
+After unzip a compressed file of images, replacing the spaces in the filename by:
+```sh 
+find . -name '*.png' -exec sh -c 'mv "$0" "${0// /_}"' {} \; 
+```
+Evaluation the model with eval.py by:
+```sh
+python eval.py semseg greenspace 0 SegForestNet MobileNetv2 --cpu
+```

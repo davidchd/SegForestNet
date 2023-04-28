@@ -11,7 +11,7 @@ import torch
 import numpy as np
 import PIL.Image
 
-file_path   = './tmp/Greenspace/School_50m/'
+file_path   = './tmp/Greenspace/Crop_50m/'
 result_path = './tmp/Greenspace/result/'
 lut = (
     (255,255,255), # void
@@ -34,11 +34,7 @@ def preprocess(filename):
 
 def segment(img):
     origin = np.asarray(img)
-    x = np.empty((4, *origin.shape[:2]))
-    for i in range(origin.shape[0]):
-        for j in range(origin.shape[1]):
-            chan = origin[i][j]
-            x[0,i,j], x[1,i,j], x[2,i,j], x[3,i,j] = chan[0], chan[1], chan[2], chan[3]
+    x = origin.transpose(2, 0, 1)
     x = np.array([x])
     y = model(torch.from_numpy(x).float().to(core.device).requires_grad_())
     return y
@@ -57,7 +53,7 @@ def saveResult(filename, img, y):
     print(result_npy)
 
 import os
-all_files = os.listdir('./tmp/Greenspace/School_50m/')
+all_files = os.listdir('./tmp/Greenspace/Crop_50m/')
 
 for e in all_files:
     img = preprocess(e)
