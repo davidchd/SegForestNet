@@ -25,7 +25,7 @@ lut = (
 )
 
 def preprocess(filename):
-    weights = torch.load('./models/pretrain/018_36_4x224x224.pt', map_location=torch.device('cpu'))
+    weights = torch.load('./models/pretrain/064_36_4x224x224.pt', map_location=torch.device('cpu'))
     model.load_state_dict(weights)
     img = PIL.Image.open(file_path + filename)
     img = img.resize((224, 224))
@@ -54,7 +54,7 @@ def saveResult(filename, img, y):
     print(result_npy)
 
 import os
-all_files = os.listdir('./tmp/Greenspace/Crop_50m/')
+all_files = os.listdir('./tmp/Greenspace/School_50m_google/')
 
 for e in all_files:
     img = preprocess(e)
