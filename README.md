@@ -26,15 +26,16 @@ The model was trained on Toulouse dataset. Files of ifferent version of the pret
     ```sh 
     python aethon.py semseg Toulouse 0 SegForestNet MobileNetv2
     ```
+    Use ```nohup``` as needed.
 
 ## Evaluate
 1. Unzip the compressed file of images to ```./tmp/Greenspace``` 
-2. In ```./tmp/Greenspace``` directory, replacing the spaces in the filename is necessary:
+2. In ```./tmp/Greenspace``` directory, replacing the spaces in the filename if necessary:
     ```sh 
     find . -name '*.png' -exec sh -c 'mv "$0" "${0// /_}"' {} \; 
     ```
 3. Make any necessary changes to [```eval.py```](./eval.py) or any of the ```eval_*.py``` files 
-4. Evaluation the model on Greenspace dataset by:
+4. Evaluation the model on Greenspace dataset by running ```eval.py```:
    ```sh
    python eval.py semseg greenspace 0 SegForestNet MobileNetv2 --cpu
    ```
