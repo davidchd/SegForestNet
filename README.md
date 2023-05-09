@@ -40,3 +40,12 @@ The model was trained on Toulouse dataset. Files of ifferent version of the pret
    python eval.py semseg greenspace 0 SegForestNet MobileNetv2 --cpu
    ```
    Results would be generated into [```./tmp/Greenspace/result/```](./tmp/Greenspace/result/) directory. Refer to [```greenspace-deploy-50m-origin.ipynb```](./greenspace-deploy-50m-origin.ipynb) for more details of the generated results. 
+
+## Code
+* It is highly recommend to read [```eval.py```](./eval.py) file to understand how the model runs. 
+* The author of SegForestNet uses import on runtime (```__import__```). We may use an IDE's debugger to inspect the code line-by-line so you can see how each module is loaded and executed. 
+* In PyTorch, a model has to be created before loading any pre-trained weights. We can create a model after ``` import core``` and ```core.init()``` (see [```eval.py```](./eval.py)):
+    ```python
+    core.create_object(models.segmentation, 'SegForestNet', input_shape=[4, 224, 224], ...)
+    ```
+* The package ```core``` is defined by the author of SegForestNet. It is primarily used, based on my understanding, for parallel computing so the model can be trained more effeciently. However, given the complexity of the repository, I failed to find a way to load the model without using the ```core``` package. This is also why all the ```eval_*.py``` files need to be run from shell as the ```core.init()``` method requires arguments from command line imput. 
